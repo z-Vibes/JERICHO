@@ -1,7 +1,7 @@
 /*
  * jer_required_mods.h -- the mods the game cannot build without.
  *
- * mp, carhacks and crumple are git submodules. A submodule that was never
+ * mp, carhacks, crumple and bake are git submodules. A submodule that was never
  * fetched leaves an empty folder, jericho_scan_mods() (premake) then returns
  * fewer ids, and the build SUCCEEDS with a registry, a mirrored JERICHO tree
  * and an exe that quietly lack a chunk of the game. Nothing in the build
@@ -12,8 +12,9 @@
  * project files still cannot produce a smaller game.
  *
  * Deliberately NOT listed: gaildrv2 (its repository is not published, so CI
- * cannot fetch it) and d1cars -- both are allowed to be absent and degrade the
- * way they always have.
+ * cannot fetch it); it is allowed to be absent. bake (formerly d1cars) used to be
+ * exempt too, but it is a release mod and the core suite refuses store addons
+ * without it, so it is required now.
  *
  * The paths are relative to this file (src/), five levels below the repo root:
  * src -> JERICHO -> C -> Game -> src_rebuild -> <root>.
@@ -32,6 +33,10 @@
 
 #	if !__has_include("../../../../../JERICHO/MODS/crumple/mod.toml")
 #		error "crumple is a submodule and was not fetched; run: git submodule update --init JERICHO/MODS/crumple"
+#	endif
+
+#	if !__has_include("../../../../../JERICHO/MODS/bake/mod.toml")
+#		error "bake is a submodule and was not fetched; run: git submodule update --init JERICHO/MODS/bake"
 #	endif
 #endif
 

@@ -69,12 +69,9 @@ jobs:
       # source repos must be present. Fetch them by name, not `submodules:
       # true`: that would also try gaildrv2, whose repository is unpublished.
       #
-      # --remote deliberately: a release carries the LATEST core mods, not the
-      # commit the parent tree happens to pin. A mod fix pushed after the last
-      # gitlink bump must reach the next build without a second JERICHO commit.
-      # Fetch the branch by name and check out FETCH_HEAD rather than
-      # `submodule update --remote`: the init above is a SHALLOW clone of the
-      # pinned commit, so the branch ref `--remote` looks for does not exist.
+      # Each submodule is checked out at the commit this tree PINS, never its
+      # branch tip, so a tag builds exactly what it records. Advance a pin with
+      # tools/update_mod_submodules.sh and commit the gitlink.
       - name: Fetch mod submodules
         shell: bash
         run: |
@@ -100,6 +97,16 @@ jobs:
 
       # The Release configuration compiles from the generated registry. A release
       # set that names a mod the registry does not would ship without it.
+      # jer_registry.c is generated, not tracked: generate it the way every build
+      # does (premake needs no PsyCross for this) and check what came out.
+      - name: Generate the module registry (premake gmake2)
+        run: |
+          curl -fL https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz -o premake5.tar.gz
+          echo '074fc07be17888ef41ca07eea1c527c390a04ea4550bf7962eeb0bea0cc9d2f5  premake5.tar.gz' | sha256sum -c -
+          tar xf premake5.tar.gz -C src_rebuild
+          chmod +x src_rebuild/premake5
+          (cd src_rebuild && ./premake5 gmake2)
+
       - name: Release mods (set, manifests and generated registry agree)
         run: python3 tools/check_release_mods.py
 
@@ -268,12 +275,8 @@ jobs:
           # four mod source repos are public and are release mods, so a release
           # must never be built without them.
           #
-          # PsyCross is pinned (its branch is a feature branch the build expects).
-          # The four CORE MODS are advanced to the latest commit of their own
-          # tracking branch (see `branch =` in .gitmodules): a release carries the
-          # current mods, not whatever gitlink the parent tree pinned. Fetch the
-          # branch by name: the init is a shallow clone of the pinned commit, so
-          # `submodule update --remote` cannot find the branch ref.
+          # PsyCross and every mod are checked out at the commit this tree pins,
+          # never a branch tip, so a tag builds exactly what it records.
           git submodule update --init --depth=1 src_rebuild/PsyCross
           for path in JERICHO/MODS/mp JERICHO/MODS/carhacks JERICHO/MODS/crumple JERICHO/MODS/bake JERICHO/MODS/antfarm; do
             echo "::group::submodule $path"
@@ -601,12 +604,9 @@ jobs:
       - name: Fetch build submodules
         shell: bash
         run: |
-          # The four mod source repos are release mods: a build that silently
-          # skips them is worse than one that fails here. Advance each to the
-          # latest commit of its own branch (.gitmodules `branch =`), so a build
-          # carries the current mods rather than the pinned gitlink. Fetch the
-          # branch by name: the init is a shallow clone of the pinned commit, so
-          # `submodule update --remote` cannot find the branch ref.
+          # The mod source repos are release mods: a build that silently skips
+          # them is worse than one that fails here. Each is checked out at the
+          # commit this tree pins, never a branch tip (see the Windows job).
           git submodule update --init --depth=1 src_rebuild/PsyCross
           for path in JERICHO/MODS/mp JERICHO/MODS/carhacks JERICHO/MODS/crumple JERICHO/MODS/bake JERICHO/MODS/antfarm; do
             echo "::group::submodule $path"
