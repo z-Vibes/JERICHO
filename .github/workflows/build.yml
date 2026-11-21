@@ -717,6 +717,13 @@ jobs:
             echo "::endgroup::"
           done
 
+      # The runtime's own logic, without game data: links the built runtime library
+      # into small test programs (src_rebuild/Game/C/JERICHO/test/).
+      - name: JERICHO runtime tests (Linux)
+        run: |
+          src_rebuild/Game/C/JERICHO/test/run_tests.sh Release
+          src_rebuild/Game/C/JERICHO/test/run_tests.sh Release_dev
+
       - name: Host API export (Linux)
         run: |
           nm -D src_rebuild/bin/Release/jericho | grep -w jer_host_api
