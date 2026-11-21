@@ -16,6 +16,11 @@
 *.ipch
 *.suo
 *.exe
+# premake is downloaded and hash-checked by linux_dev_prepare.sh / CI into these
+# paths, never committed. The Windows premake5.exe is already covered by *.exe;
+# the Linux binary has no extension, so it needs its own rule.
+/premake5
+/src_rebuild/premake5
 *.ilk
 *.lib
 *.vcxproj
