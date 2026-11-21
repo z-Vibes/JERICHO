@@ -4,6 +4,25 @@ Scope: the superproject at `7c9f4c1` (v0.13.4) plus the pinned submodules
 (`PsyCross`, `mp`, `carhacks`, `crumple`, `bake`). Commit messages were treated as
 leads, not as truth; each item below says what was actually checked.
 
+## Status (branch `c-vibes/fix-everything`)
+
+| Item | State |
+|---|---|
+| P0.1 dedi example config refuses every client | **patch ready**: `docs/patches/mp/` (mod repo); verified the old config refused a core-suite client and the new one admits it |
+| P0.2 silent hook drop | **fixed**: logged once per pass with module and event; covered by `test_dispatch.c` |
+| P0.3 required-mods guard missed `bake` | **fixed**: `premake5.lua` and `jer_required_mods.h` |
+| P0.4 hooks registered mid-dispatch | **fixed**: queued until the outermost fire returns. The bug was real: on the old code the registrar ran twice |
+| P1 `d1cars` rename | **fixed** in this tree; `doccheck.py` now fails on retired ids. **patches ready** for mp, carhacks and bake |
+| P1 `tools/README.md` drift | **fixed** |
+| P1 release reproducibility | **corrected**: CI already builds the pinned commits. Only the comments and `tools/README.md` said otherwise, and both are fixed. A typo'd pin now fails at `git fetch origin <sha>` |
+| P1 custom-id collisions | **corrected**: `check_mod_interface.py` already scans the engine headers and catches the +45 clash (re-tested). No change needed |
+| P2 CI retry annotations | **fixed** |
+| P2 flaky parallel link | open: still retried, not fixed |
+| P2 tracked generated registry | **fixed**: untracked; CI generates it. A stale copy broke the `Release_dev` link here (`antfarm`/`gaildrv2` entries), so this was more than cosmetic |
+| P2 repo hygiene | open: needs the owner's OK (deletions) |
+| P3 warnings, `jer_modstore.c` split, generated SDK headers | open |
+| New: host-side tests never ran in CI | **fixed**: `test/run_tests.sh` runs the dispatcher test plus `test_car_release`, `test_ai_path` and `test_jerai_path` (C and C++) on the Linux job |
+
 ## What was verified
 
 | Check | Result |
@@ -81,6 +100,10 @@ files *and* the pinned submodules.
 
 ## P1 - releases are not reproducible from a JERICHO commit
 
+> **Correction (second pass):** wrong as written. The fetch steps already check out
+> `HEAD:<path>` (the pin); the comments above them, and `tools/README.md`, described
+> the old branch-tip behaviour. Both now match the code.
+
 CI clones each mod at its pin, then **advances it to the tracking branch's
 HEAD** (`tools/README.md`: "a mod fix pushed after the last gitlink bump still
 reaches the next download without a JERICHO commit"). So a `v*` tag does not
@@ -97,6 +120,10 @@ step that checks every gitlink exists on its remote, and run the full build on
 pull requests before a tag.
 
 ## P1 - custom-id collisions still slip past the checker
+
+> **Correction (second pass):** wrong as written. The checker already reads
+> `src_rebuild/Game/C/JERICHO/include/`, and planting the old +45 value makes it fail
+> by name. The clash in `b8f8d7e` was caught and fixed.
 
 `b8f8d7e` moved `JER_CARQ_CITYWIRE` from custom +45 to +47 because +45 was
 already `JER_CRUMPLE_GET_SCALE`. `check_mod_interface.py` reports "10 unique

@@ -271,7 +271,7 @@ def check_renames():
     for old, new in RENAMED_IDS.items():
         pattern = renamed_id_patterns(old)
         for path in git_ls("*"):
-            if path.startswith("libs/") or path in ("CHANGELOG.md", "docs/FIX_PLAN.md", "tools/doccheck.py"):
+            if path.startswith(("libs/", "docs/patches/")) or path in ("CHANGELOG.md", "docs/FIX_PLAN.md", "tools/doccheck.py"):
                 continue
             full = os.path.join(ROOT, path)
             if not os.path.isfile(full) or os.path.getsize(full) > 2_000_000:

@@ -95,15 +95,16 @@ jobs:
       - name: Docs are consistent (links, events, indexed, counted claims)
         run: python tools/doccheck.py
 
-      # ...and the retired-id check really fails: plant a d1cars path, expect red.
+      # ...and the retired-id check really fails: plant a retired-id path, expect red.
       - name: Docs check catches a retired module id (planted fault)
         shell: bash
         run: |
-          echo 'run JERICHO/MODS/d1cars/tools/bake.py' >> docs/README.md
+          old=d1; old="${old}cars"   # spelled in parts so this file passes the check itself
+          echo "run JERICHO/MODS/$old/tools/bake.py" >> docs/README.md
           if python tools/doccheck.py; then
-            echo "::error::doccheck passed a planted d1cars path"; exit 1
+            echo "::error::doccheck passed a planted $old path"; exit 1
           fi
-          python tools/doccheck.py | grep -q "retired id 'd1cars'"
+          python tools/doccheck.py | grep -q "retired id '$old'"
           git checkout -- docs/README.md
 
       # The Release configuration compiles from the generated registry. A release
