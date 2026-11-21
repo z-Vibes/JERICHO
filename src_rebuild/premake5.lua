@@ -880,7 +880,7 @@ project "JERICHO"
             "copy /Y \"..\\..\\JERICHO\\build_game.sh\" \"%{cfg.buildtarget.directory}JERICHO\\build_game.sh\"",
             "copy /Y \"..\\..\\JERICHO\\build_mods.sh\" \"%{cfg.buildtarget.directory}JERICHO\\build_mods.sh\"",
             -- the Driver 1 car/ped bake launchers at the build root, as CI packs them;
-            -- a stale copy here still pointed at the retired MODS\d1cars\tools.
+            -- a stale copy here still pointed at the retired d1cars module's tools folder.
             "copy /Y \"..\\..\\BAKE_D1_CARS.bat\" \"%{cfg.buildtarget.directory}BAKE_D1_CARS.bat\"",
             "copy /Y \"..\\..\\BAKE_D1_CARS.sh\" \"%{cfg.buildtarget.directory}BAKE_D1_CARS.sh\"",
             -- The updater, at the build's ROOT next to the exe, so a locally built

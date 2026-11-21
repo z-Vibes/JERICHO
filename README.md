@@ -78,13 +78,14 @@ repositories ([JERICHO-Mod-MP](https://github.com/Njurse/JERICHO-Mod-MP),
 clone needs them explicitly:
 
 ```sh
-git submodule update --init JERICHO/MODS/mp JERICHO/MODS/carhacks JERICHO/MODS/crumple
+git submodule update --init src_rebuild/PsyCross JERICHO/MODS/mp JERICHO/MODS/carhacks JERICHO/MODS/crumple JERICHO/MODS/bake
 ```
 
-`tools/update_mod_submodules.sh` advances those pins to the latest commits (review
-the printed diff, then commit the gitlinks). `d1cars` is fetched for release builds
-but its data is excluded from the mirror; `gaildrv2` remains unpublished and is not
-needed for a normal build.
+The build stops with the exact command to run if one of the four mods is
+missing. `bake` (the Driver 1 car toolkit, formerly `d1cars`) is a release mod,
+but its Driver 1 data is excluded from the mirror. `tools/update_mod_submodules.sh`
+advances the mod pins to the latest commits (review the printed diff, then commit
+the gitlinks). `gaildrv2` remains unpublished and is not needed for a normal build.
 
 JERICHO is compiled into the game, so it can see the game's data. An external
 module cannot open `player[]` or `car_data[]` itself, because Windows will not
