@@ -686,10 +686,17 @@ jobs:
               # the link rule, and the mirror inside it, actually re-runs.
               case "$cfg" in release_dev_x64) bincfg=Release_dev ;; *) bincfg=Release ;; esac
               rm -f "../bin/$bincfg/jericho" "../bin/$bincfg/JERICHO" "../bin/$bincfg/JERICHO_dev"
-              make config=$cfg -j1 2>&1 | grep -v '^==== ' | tail -10 | while IFS= read -r line; do
-                [ -n "$line" ] && echo "::error title=$cfg::${line}"
-              done
-              rc=${PIPESTATUS[0]}
+              make config=$cfg -j1 > "/tmp/make-$cfg-serial.log" 2>&1
+              rc=$?
+              # Annotate only a retry that FAILED: a green retry used to post its
+              # last lines as ::error, painting a successful build red.
+              if [ "$rc" -ne 0 ]; then
+                grep -v '^==== ' "/tmp/make-$cfg-serial.log" | tail -10 | while IFS= read -r line; do
+                  [ -n "$line" ] && echo "::error title=$cfg::${line}"
+                done
+              else
+                tail -3 "/tmp/make-$cfg-serial.log"
+              fi
             fi
             set -e
             if [ "$rc" -ne 0 ]; then

@@ -112,7 +112,7 @@ These are the numbers and behaviours the headers define.
 
 | Limit | Behaviour |
 |---|---|
-| Event handlers | **256** across every module; registering past that returns without a log |
+| Event handlers | **256** across every module; registering past that drops the hook and logs it once (module and event) in `JERICHO.log` |
 | Override slots | **8**; only `JER_OVERRIDE_SLOT_SIM` (the world step) is named today |
 | Module table | fixed (`JER_MAX_MODULES`, 32 slots) |
 | External loading | Windows and Linux |

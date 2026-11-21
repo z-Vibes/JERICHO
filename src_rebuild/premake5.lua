@@ -271,8 +271,8 @@ end
 -- that reports it gets these - JERICHO_runtime (its boot banner) and the exe (the
 -- frontend's version readout, which must not fall back to "unknown").
 local function jer_version_defines()
-   -- deterministic JERICHO build version: git describe when available,
-   -- otherwise a plain literal (each exe release = a new JERICHO version).
+   -- deterministic JERICHO build version: the exact v* tag on HEAD when there is
+   -- one, otherwise JERICHO_BASE_VERSION (below).
    --
    -- Release tags are spelled v0.9.0 so that GitHub Actions publishes them --
    -- the workflow triggers on `v*` and the repo's older REDRIVER2 tags carry
@@ -291,9 +291,9 @@ local function jer_version_defines()
       return (s:gsub("%s+$", ""))
    end
 
-   -- The APP version. A tag when the build sits exactly on one, otherwise
-   -- "<tag>-<n>-g<hash>", or a bare hash for a checkout with no tags at all. The
-   -- leading "v" the release tags carry is stripped, so the binary says "0.10.2".
+   -- The APP version: the tag when the build sits exactly on one, otherwise the
+   -- base version. The leading "v" the release tags carry is stripped, so the
+   -- binary says "0.10.2".
    -- --match "v*": only RELEASE tags name a version; a checkpoint/... tag must
    -- never become the window title (it once read "checkpoint/getrdun-...").
    -- JERICHO_BASE_VERSION pins the version a branch is working toward, so the

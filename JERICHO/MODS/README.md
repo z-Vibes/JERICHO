@@ -29,7 +29,7 @@ match what a release actually built (it prints the diff and stages nothing).
 
 ## A mod that is not there must not build a smaller game
 
-`mp`, `carhacks` and `crumple` are **required**. If one is missing the build
+`mp`, `carhacks`, `crumple` and `bake` are **required**. If one is missing the build
 stops, twice over:
 
 * `premake5.lua` errors at generation — `mp is a submodule and was not fetched;
@@ -37,8 +37,9 @@ stops, twice over:
 * `src/jer_required_mods.h` raises the same `#error` at compile time, so an IDE
   or a plain `msbuild` run cannot skip it.
 
-`gaildrv2` and `d1cars` are deliberately **not** on that list: they may be
-absent and degrade the way they always have.
+`gaildrv2` is deliberately **not** on that list: its repository is not
+published, so it may be absent. (`bake`, formerly `d1cars`, used to be exempt
+too; it is a release mod now, so it is required.)
 
 ## Conventions
 
