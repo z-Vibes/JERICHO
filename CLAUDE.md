@@ -1,5 +1,6 @@
 # JERICHO: notes for the next Claude session
 
+You are continuing work on JERICHO (a mod host built into the REDRIVER2 Driver 2 engine). The audit and the first round of fixes are **done**. Do not redo them. Start from what's open below.
 
 ## Where things stand
 - **Open PR:** `z-Vibes/JERICHO:c-vibes/fix-everything-0.14` into `Njurse/JERICHO:0.14`, 2 commits on top of `0.14` @ `2f01241`. Read its CI result first.
